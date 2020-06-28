@@ -1,12 +1,31 @@
 class Jogo {
   constructor() {
     this.inimigoAtual = 0;
+    this.mapa = [
+      {
+        inimigo: 0,
+        velocidade: 10
+      },
+      {
+        inimigo: 1,
+        velocidade: 30
+      },
+      {
+        inimigo: 1,
+        velocidade: 15
+      },
+      {
+        inimigo: 2,
+        velocidade: 40
+      },
+    ]
 
   }
 
   setup() {
     cenario = new Cenario(imagemCenario, 3);
     pontuacao = new Pontuacao();
+    vida = new Vida(3, 3);
 
     personagem = new Personagem(matrizPersonagem, imagemPersonagem, 0, 30, 110, 135, 220, 270);
     const inimigo = new Inimigo(matrizInimigo, imagemInimigo, width - 52, 30, 52, 52, 104, 104, 10, 100);
@@ -28,7 +47,8 @@ class Jogo {
   draw() {
     cenario.exibe();
     cenario.move();
-
+    
+    vida.draw();
     pontuacao.exibe();
     pontuacao.adicionarPonto();
     personagem.exibe();
@@ -50,8 +70,13 @@ class Jogo {
     }
 
     if (personagem.estaColidindo(inimigo)) {
-      image(imagemGameOver, width / 2 - 200, height / 3)
-      noLoop()
+      vida.perdeVida()
+      personagem.tornarInvencivel()
+      if(vida.vidas === 0) {
+        image(imagemGameOver, width / 2 - 200, height / 3)
+        noLoop()
+       }
+      
     }
   }
 }
